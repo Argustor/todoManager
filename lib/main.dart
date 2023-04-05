@@ -11,9 +11,9 @@ class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 20, 155, 126)),
         useMaterial3: true,
       ),
@@ -134,7 +134,7 @@ final void Function(Todo todo) removeTodo;
   final Todo todo;
 
   TextStyle? _getTextStyle(bool checked) {
-    if (checked) return null;
+    if (!checked) return null;
     return const TextStyle(
       color: Colors.black54,
       decoration: TextDecoration.lineThrough,
