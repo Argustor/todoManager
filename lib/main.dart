@@ -56,6 +56,12 @@ class _TodoListState extends State<TodoList> {
       todo.completed = !todo.completed;
     });
   }
+
+  void _deleteTodo(Todo todo) {
+    setState(() {
+      _todos.removeWhere((element) => element.name == todo.name);
+    });
+  }
  @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +74,7 @@ class _TodoListState extends State<TodoList> {
           return TodoItem(
             todo: todo,
             onTodoChanged: _handleTodoChange,
+            removeTodo: _deleteTodo,
           );
         }).toList(),
         ),
@@ -121,7 +128,8 @@ Future<void> _displayDialog() async {
 
 class TodoItem extends StatelessWidget{
 final void Function(Todo todo) onTodoChanged;
-  TodoItem({required this.todo, required this.onTodoChanged}) : super(key: ObjectKey(todo));
+final void Function(Todo todo) removeTodo;
+  TodoItem({required this.todo, required this.onTodoChanged, required this.removeTodo}) : super(key: ObjectKey(todo));
 
   final Todo todo;
 
@@ -158,7 +166,9 @@ final void Function(Todo todo) onTodoChanged;
               color: Colors.red,
               ),
               alignment: Alignment.centerRight,
-              onPressed: () {},
+              onPressed: () {
+                removeTodo(todo);
+              },
               ),
       ]),
     );
