@@ -51,18 +51,26 @@ class _TodoListState extends State<TodoList> {
     _textFieldController.clear();
   }
 
+  void _handleTodoChange(Todo todo) {
+    setState(() {
+      todo.completed = !todo.completed;
+    });
+  }
  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[],
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        children: _todos.map((Todo todo) {
+          return TodoItem(
+            todo: todo,
+            onTodoChanged: _handleTodoChange,
+          );
+        }).toList(),
         ),
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _displayDialog(),
         tooltip: 'Add Todo',
@@ -112,7 +120,8 @@ Future<void> _displayDialog() async {
 }
 
 class TodoItem extends StatelessWidget{
-  TodoItem({required this.todo}) : super(key: ObjectKey(todo));
+final void Function(Todo todo) onTodoChanged;
+  TodoItem({required this.todo, required this.onTodoChanged}) : super(key: ObjectKey(todo));
 
   final Todo todo;
 
@@ -127,12 +136,16 @@ class TodoItem extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {},
+      onTap: () {
+        onTodoChanged(todo);
+      },
       leading: Checkbox(
         checkColor: Colors.greenAccent,
         activeColor: Colors.red,
         value: todo.completed,
-        onChanged: (value) {},
+        onChanged: (value) {
+          onTodoChanged(todo);
+        },
       ),
       title:Row(children: <Widget>[
         Expanded(
